@@ -36,10 +36,18 @@ npm install
 
 3. Start the development server:
 ```bash
-npm start
+npm run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript type checking
 
 ## Usage
 
@@ -67,10 +75,11 @@ npm start
 
 ## Technologies Used
 
-- React 18
+- React 18 with TypeScript
+- Vite (fast build tool)
 - Tailwind CSS
 - Lucide React (for icons)
-- Create React App
+- ESLint + TypeScript ESLint
 
 ## Contributing
 
@@ -103,13 +112,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Happy Coding!** 🚀 Remember to feed your pet and keep coding to watch it grow!
-
-Note: This project is a fun way to gamify your coding journey and encourage consistent habits. It is not intended for production use or serious pet care. Enjoy the journey of coding with your digital companion! 🐾
-
-This README was generated with the help of Claude Sonnet 4 AI and is meant to provide a comprehensive overview of the CodePet project. Feel free to contribute and make it even better!
-
-**The prompt used was**
-
-Hi Claude! Could you design a digital pet that grows based on my coding habits? If you need more information from me, ask me 1-2 key questions right away. If you think I should upload any documents that would help you do a better job, let me know. You can use the tools you have access to — like Google Drive, web search, etc. — if they’ll help you better accomplish this task. Do not use analysis tool. Please keep your responses friendly, brief and conversational.
-
-Please execute the task as soon as you can - an artifact would be great if it makes sense. If using an artifact, consider what kind of artifact (interactive, visual, checklist, etc.) might be most helpful for this specific task. Thanks for your help!

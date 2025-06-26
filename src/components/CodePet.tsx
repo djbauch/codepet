@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Heart, Code, Trophy, Star, Zap, BookOpen, GitBranch } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { Heart, Code, Trophy, Star, Zap, BookOpen } from 'lucide-react'
+import type { Pet, PetStage, PetStageInfo, Activity, ActivityLog } from '@/types'
 
-const CodePet = () => {
-  const [pet, setPet] = useState({
+const CodePet: React.FC = () => {
+  const [pet, setPet] = useState<Pet>({
     name: 'CodeBuddy',
     level: 1,
     xp: 0,
@@ -10,7 +11,7 @@ const CodePet = () => {
     energy: 100,
     intelligence: 10,
     creativity: 10,
-    stage: 'egg', // egg -> baby -> teen -> adult -> master
+    stage: 'egg',
     lastFed: Date.now(),
     stats: {
       totalCommits: 0,
@@ -19,54 +20,54 @@ const CodePet = () => {
       languagesLearned: 0,
       projectsCompleted: 0
     }
-  });
+  })
 
-  const [activities, setActivities] = useState([]);
-  const [selectedActivity, setSelectedActivity] = useState('');
+  const [activities, setActivities] = useState<ActivityLog[]>([])
+  const [selectedActivity, setSelectedActivity] = useState<string>('')
 
-  const petStages = {
+  const petStages: Record<PetStage, PetStageInfo> = {
     egg: { emoji: '🥚', name: 'Mysterious Egg', minLevel: 1 },
     baby: { emoji: '🐣', name: 'Code Chick', minLevel: 2 },
     teen: { emoji: '🐦', name: 'Script Sparrow', minLevel: 5 },
     adult: { emoji: '🦅', name: 'Code Eagle', minLevel: 10 },
     master: { emoji: '🔥', name: 'Debug Dragon', minLevel: 20 }
-  };
+  }
 
-  const codingActivities = [
+  const codingActivities: Activity[] = [
     { id: 'commit', label: 'Made a commit', xp: 15, effect: { intelligence: 2 } },
     { id: 'debug', label: 'Fixed a bug', xp: 25, effect: { intelligence: 3, happiness: 5 } },
     { id: 'learn', label: 'Learned something new', xp: 30, effect: { intelligence: 5, creativity: 3 } },
     { id: 'code1h', label: 'Coded for 1 hour', xp: 20, effect: { energy: -10, intelligence: 3 } },
     { id: 'project', label: 'Completed a project', xp: 50, effect: { happiness: 15, creativity: 5, intelligence: 5 } },
     { id: 'refactor', label: 'Refactored code', xp: 35, effect: { intelligence: 4, creativity: 2 } }
-  ];
+  ]
 
-  const getCurrentStage = (level) => {
-    if (level >= 20) return 'master';
-    if (level >= 10) return 'adult';
-    if (level >= 5) return 'teen';
-    if (level >= 2) return 'baby';
-    return 'egg';
-  };
+  const getCurrentStage = (level: number): PetStage => {
+    if (level >= 20) return 'master'
+    if (level >= 10) return 'adult'
+    if (level >= 5) return 'teen'
+    if (level >= 2) return 'baby'
+    return 'egg'
+  }
 
-  const getXpForNextLevel = (level) => level * 100;
+  const getXpForNextLevel = (level: number): number => level * 100
 
-  const performActivity = (activityId) => {
-    const activity = codingActivities.find(a => a.id === activityId);
-    if (!activity) return;
+  const performActivity = (activityId: string): void => {
+    const activity = codingActivities.find(a => a.id === activityId)
+    if (!activity) return
 
     setPet(prev => {
-      const newXp = prev.xp + activity.xp;
-      const xpNeeded = getXpForNextLevel(prev.level);
-      const newLevel = newXp >= xpNeeded ? prev.level + 1 : prev.level;
-      const remainingXp = newXp >= xpNeeded ? newXp - xpNeeded : newXp;
+      const newXp = prev.xp + activity.xp
+      const xpNeeded = getXpForNextLevel(prev.level)
+      const newLevel = newXp >= xpNeeded ? prev.level + 1 : prev.level
+      const remainingXp = newXp >= xpNeeded ? newXp - xpNeeded : newXp
 
-      const newStats = { ...prev.stats };
-      if (activityId === 'commit') newStats.totalCommits++;
-      if (activityId === 'code1h') newStats.codingHours++;
-      if (activityId === 'debug') newStats.bugsFixed++;
-      if (activityId === 'learn') newStats.languagesLearned++;
-      if (activityId === 'project') newStats.projectsCompleted++;
+      const newStats = { ...prev.stats }
+      if (activityId === 'commit') newStats.totalCommits++
+      if (activityId === 'code1h') newStats.codingHours++
+      if (activityId === 'debug') newStats.bugsFixed++
+      if (activityId === 'learn') newStats.languagesLearned++
+      if (activityId === 'project') newStats.projectsCompleted++
 
       return {
         ...prev,
@@ -79,27 +80,27 @@ const CodePet = () => {
         creativity: prev.creativity + (activity.effect.creativity || 0),
         stats: newStats,
         lastFed: Date.now()
-      };
-    });
+      }
+    })
 
     setActivities(prev => [...prev, {
       id: Date.now(),
       activity: activity.label,
       xp: activity.xp,
       timestamp: new Date().toLocaleTimeString()
-    }]);
+    }])
 
-    setSelectedActivity('');
-  };
+    setSelectedActivity('')
+  }
 
-  const feedPet = () => {
+  const feedPet = (): void => {
     setPet(prev => ({
       ...prev,
       happiness: Math.min(100, prev.happiness + 20),
       energy: Math.min(100, prev.energy + 15),
       lastFed: Date.now()
-    }));
-  };
+    }))
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -107,14 +108,14 @@ const CodePet = () => {
         ...prev,
         happiness: Math.max(0, prev.happiness - 1),
         energy: Math.max(0, prev.energy - 0.5)
-      }));
-    }, 30000); // Decrease every 30 seconds for demo
+      }))
+    }, 30000) // Decrease every 30 seconds for demo
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval)
+  }, [])
 
-  const currentStageInfo = petStages[pet.stage];
-  const progressToNext = (pet.xp / getXpForNextLevel(pet.level)) * 100;
+  const currentStageInfo = petStages[pet.stage]
+  const progressToNext = (pet.xp / getXpForNextLevel(pet.level)) * 100
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
@@ -143,7 +144,10 @@ const CodePet = () => {
               <span className="text-sm">{pet.xp}/{getXpForNextLevel(pet.level)}</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-yellow-500 h-2 rounded-full transition-all duration-300" style={{width: `${progressToNext}%`}}></div>
+              <div
+                className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                style={{width: `${progressToNext}%`}}
+              />
             </div>
 
             <div className="flex items-center justify-between">
@@ -154,7 +158,10 @@ const CodePet = () => {
               <span className="text-sm">{pet.happiness}/100</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-red-500 h-2 rounded-full transition-all duration-300" style={{width: `${pet.happiness}%`}}></div>
+              <div
+                className="bg-red-500 h-2 rounded-full transition-all duration-300"
+                style={{width: `${pet.happiness}%`}}
+              />
             </div>
 
             <div className="flex items-center justify-between">
@@ -165,12 +172,15 @@ const CodePet = () => {
               <span className="text-sm">{Math.round(pet.energy)}/100</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full transition-all duration-300" style={{width: `${pet.energy}%`}}></div>
+              <div
+                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                style={{width: `${pet.energy}%`}}
+              />
             </div>
           </div>
 
           {/* Pet Care */}
-          <button 
+          <button
             onClick={feedPet}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
           >
@@ -186,9 +196,9 @@ const CodePet = () => {
               <Code className="w-5 h-5 mr-2" />
               Log Coding Activity
             </h3>
-            
-            <select 
-              value={selectedActivity} 
+
+            <select
+              value={selectedActivity}
               onChange={(e) => setSelectedActivity(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
@@ -200,7 +210,7 @@ const CodePet = () => {
               ))}
             </select>
 
-            <button 
+            <button
               onClick={() => performActivity(selectedActivity)}
               disabled={!selectedActivity}
               className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
@@ -247,7 +257,7 @@ const CodePet = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CodePet;
+export default CodePet
