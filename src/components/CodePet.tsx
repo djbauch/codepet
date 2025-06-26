@@ -24,6 +24,7 @@ const CodePet: React.FC = () => {
 
   const [activities, setActivities] = useState<ActivityLog[]>([])
   const [selectedActivity, setSelectedActivity] = useState<string>('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const petStages: Record<PetStage, PetStageInfo> = {
     egg: { emoji: '🥚', name: 'Mysterious Egg', minLevel: 1 },
@@ -94,6 +95,18 @@ const CodePet: React.FC = () => {
   }
 
   const feedPet = (): void => {
+    // Check if pet is already at maximum happiness and energy
+    if (pet.happiness >= 100 && pet.energy >= 100) {
+      setErrorMessage('Your pet is already full and happy! 🐾')
+
+      // Clear the error message after 3 seconds
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 3000)
+
+      return
+    }
+
     setPet(prev => ({
       ...prev,
       happiness: Math.min(100, prev.happiness + 20),
@@ -123,6 +136,13 @@ const CodePet: React.FC = () => {
         <h1 className="text-4xl font-bold text-gray-800 mb-2">CodePet</h1>
         <p className="text-gray-600">Your digital companion that grows with your coding journey!</p>
       </div>
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="mb-4 p-3 bg-orange-100 border border-orange-400 text-orange-700 rounded-lg text-center animate-pulse">
+          {errorMessage}
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Pet Display */}
